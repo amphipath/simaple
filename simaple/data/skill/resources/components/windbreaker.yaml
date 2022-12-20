@@ -1,0 +1,106 @@
+kind: Component
+version: simaple.io/SynergySkillComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 핀포인트 피어스
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  name: 핀포인트 피어스
+  damage: 340
+  hit: 2
+  cooldown: 0
+  delay: 690
+  duration: 60_000
+  synergy: 
+    damage_multiplier: 15
+    ignored_defence: 15
+---
+kind: Component
+version: simaple.io/AttackSkillComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 천공의 노래
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  type: DamageSkill
+  name: 천공의 노래
+  delay: 120
+  damage: '{{ 300 + 3 * skill_level }}'
+  hit: 1
+  combat_orders_enabled: true
+  default_skill_level: 30
+---
+kind: Component
+version: simaple.io/BuffFinalAttackComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 스톰 브링어
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  listening_actions:
+    핀포인트 피어스.use.emitted.global.damage: trigger
+    천공의 노래.use.emitted.global.damage: trigger
+    하울링 게일.elapse.emitted.global.damage: trigger
+    시그너스 팔랑크스.elapse.emitted.global.damage: trigger
+    볼텍스 스피어.elapse.emitted.global.damage: trigger
+  type: DamageSkill
+  name: 스톰 브링어
+  delay: 0
+  damage: 380
+  hit: 0.3
+  disable_validity: True
+---
+kind: Component
+version: simaple.io/BuffFinalAttackComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 트라이플링 윔
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  listening_actions:
+    핀포인트 피어스.use.emitted.global.damage: trigger
+    천공의 노래.use.emitted.global.damage: trigger
+    하울링 게일.elapse.emitted.global.damage: trigger
+    시그너스 팔랑크스.elapse.emitted.global.damage: trigger
+    볼텍스 스피어.elapse.emitted.global.damage: trigger
+  type: DamageSkill
+  name: 트라이플링 윔
+  delay: 0
+  damage: '{{ (200 + skill_level * 3) * (1 - 0.01 * (10 + skill_level // 3)) + (300 + skill_level * 3) * 0.01 * (10 + skill_level // 3) }}'
+  hit: '{{ 2 * (35 + 10 + skill_level // 2) * 0.01 }}'
+  disable_validity: True
+---
+kind: Component
+version: simaple.io/ChargableStackDependentTickDamageSkillComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 하울링 게일
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  name: 하울링 게일
+  delay: 630
+  max_stack: 3
+  charge_interval: 20_000
+
+  duration: 10_000
+  tick_interval: 480
+  tick_damage:
+    - '{{ 325 + skill_level * 13 }}'
+    - '{{ 785 + skill_level * 31 }}'
+    - '{{ 785 + 375 + skill_level * (31 + 19) }}'
+  tick_hit: [3, 3, 3]

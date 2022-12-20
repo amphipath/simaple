@@ -93,3 +93,10 @@ class StackState(State):
 
     def decrease(self, value: int = 1):
         self.stack -= value
+
+
+class IntegerState(State):
+    value: int
+
+    def set_value(self, value: int):
+        self.value = value
