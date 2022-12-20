@@ -83,7 +83,7 @@ data:
   disable_validity: True
 ---
 kind: Component
-version: simaple.io/ChargableStackDependentTickDamageSkillComponent
+version: simaple.io/ChargeableStackDependentTickDamageSkillComponent
 metadata:
   label:
     group: windbreaker

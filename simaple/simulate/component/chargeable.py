@@ -44,7 +44,7 @@ class ChargeableStackState(State):
         return self.charge_interval - self.elapsed_time_after_latest_charge
 
 
-class ChargableStackDependentTickDamageSkillComponent(Component):
+class ChargeableStackDependentTickDamageSkillComponent(Component):
     """Component for howling Gale"""
 
     name: str
