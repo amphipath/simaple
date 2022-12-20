@@ -78,6 +78,49 @@ class IntervalState(State):
         self.interval_time_left = 0
 
 
+class DelayedLimitedIntervalState(State):
+    interval_counter: float = 0.0
+    interval: float
+    delay: float = 0.0
+    interval_time_left: float = 0.0
+    count: int = 0
+    maximum_count: int
+
+    def set_time_left_and_delay(self, time: float, delay: float):
+        self.interval_time_left = time
+        self.interval_counter = self.interval
+        self.count = 0
+        self.delay = delay
+
+    def enabled(self):
+        return self.interval_time_left > 0
+
+    def resolving(self, time: float):
+        if self.delay > time:
+            self.delay -= time
+            self.interval_time_left -= time
+            return
+        elif self.delay > 0:
+            time -= self.delay
+            self.interval_time_left -= self.delay
+            self.delay = 0
+
+        maximum_elapsed = max(0, int(self.interval_time_left // self.interval))
+
+        self.interval_time_left -= time
+        self.interval_counter -= time
+        elapse_count = 0
+
+        while self.interval_counter <= 0 and elapse_count < maximum_elapsed and self.count < self.maximum_count:
+            self.interval_counter += self.interval
+            elapse_count += 1
+            yield 1
+            self.count += 1
+
+    def disable(self):
+        self.interval_time_left = 0
+
+
 class StackState(State):
     stack: int = 0
     maximum_stack: int

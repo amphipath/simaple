@@ -45,6 +45,12 @@ class NamedTrait(ComponentTrait):
         ...
 
 
+class InitialDelayTrait(ComponentTrait):
+    @abstractmethod
+    def _get_initial_delay(self) -> float:
+        ...
+
+
 class InvalidatableTrait(ComponentTrait):
     @abstractmethod
     def invalidate_if_disabled(self, validity: Validity) -> Validity:

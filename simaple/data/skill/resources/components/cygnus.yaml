@@ -1,0 +1,18 @@
+kind: Component
+version: simaple.io/CygnusPhalanxComponent
+metadata:
+  label:
+    group: cygnus
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  name: 시그너스 팔랑크스
+  cooldown: 30_000
+  delay: 600
+  tick_initial_delay: 600
+  tick_interval: 120
+  tick_damage: '{{ 450 + skill_level * 18 }}'
+  tick_hit: 1
+  tick_count_max: '{{ 40 + skill_level }}'
+  duration: 20_000

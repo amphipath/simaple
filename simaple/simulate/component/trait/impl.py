@@ -1,9 +1,10 @@
-from simaple.simulate.component.state import CooldownState, DurationState, IntervalState
+from simaple.simulate.component.state import CooldownState, DelayedLimitedIntervalState, DurationState, IntervalState
 from simaple.simulate.component.trait.base import (
     CooldownTrait,
     DelayTrait,
     DurationTrait,
     EventProviderTrait,
+    InitialDelayTrait,
     InvalidatableTrait,
     NamedTrait,
     SimpleDamageTrait,
@@ -175,6 +176,62 @@ class TickEmittingTrait(
 
         return (cooldown_state, interval_state, dynamics), [
             self.event_provider.dealt(damage, hit),
+            self.event_provider.delayed(delay),
+        ]
+
+
+class DelayedLimitedTickEmittingTrait(
+    CooldownTrait,
+    TickDamageTrait,
+    InitialDelayTrait,
+    DurationTrait,
+    EventProviderTrait,
+    DelayTrait,
+):
+    def elapse_tick_emitting_trait(
+        self, time: float, cooldown_state: CooldownState, delayed_limited_interval_state: DelayedLimitedIntervalState
+    ):
+        cooldown_state = cooldown_state.copy()
+        delayed_limited_interval_state = delayed_limited_interval_state.copy()
+
+        cooldown_state.elapse(time)
+        lapse_count = 0
+        for _ in delayed_limited_interval_state.resolving(time):
+            lapse_count += 1
+
+        tick_damage, tick_hit = self._get_tick_damage_hit()
+
+        return (cooldown_state, delayed_limited_interval_state), [self.event_provider.elapsed(time)] + [
+            self.event_provider.dealt(tick_damage, tick_hit) for _ in range(lapse_count)
+        ]
+
+    def use_tick_emitting_trait(
+        self,
+        cooldown_state: CooldownState,
+        delayed_limited_interval_state: DelayedLimitedIntervalState,
+        dynamics: Dynamics,
+    ):
+        cooldown_state = cooldown_state.copy()
+        delayed_limited_interval_state = delayed_limited_interval_state.copy()
+
+        if not cooldown_state.available:
+            return (
+                cooldown_state,
+                delayed_limited_interval_state,
+                dynamics,
+            ), [self.event_provider.rejected()]
+
+        delay = self._get_delay()
+
+        cooldown_state.set_time_left(
+            dynamics.stat.calculate_cooldown(self._get_cooldown())
+        )
+        delayed_limited_interval_state.set_time_left_and_delay(
+            self._get_duration(),
+            self._get_initial_delay()
+        )
+
+        return (cooldown_state, delayed_limited_interval_state, dynamics), [
             self.event_provider.delayed(delay),
         ]
 
