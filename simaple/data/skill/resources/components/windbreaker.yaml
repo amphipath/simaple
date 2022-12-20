@@ -146,3 +146,11 @@ patch:
 data:
   name: 아이들 윔
   delay: 450
+
+  duration: 10_000
+  tick_interval: 480
+  tick_damage:
+    - '{{ 325 + skill_level * 13 }}'
+    - '{{ 785 + skill_level * 31 }}'
+    - '{{ 785 + 375 + skill_level * (31 + 19) }}'
+  tick_hit: [3, 3, 3]
