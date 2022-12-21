@@ -1,6 +1,6 @@
 def test_read_main(simulator_configuration, client):
     resp = client.post(
-        "/workspaces/",
+        "/workspaces",
         json=simulator_configuration,
     )
 

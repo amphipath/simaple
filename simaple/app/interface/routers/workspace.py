@@ -29,7 +29,7 @@ UowProvider = fastapi.Depends(Provide[WebContainer.unit_of_work])
 router = fastapi.APIRouter(prefix="/workspaces")
 
 
-@router.post("/", response_model=SimulatorResponse)
+@router.post("", response_model=SimulatorResponse)
 @inject
 def create(
     conf: MinimalSimulatorConfiguration,

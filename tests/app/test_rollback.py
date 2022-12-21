@@ -3,7 +3,7 @@ import json
 
 def test_read_main(simulator_configuration, record_file_name, client):
     response = client.post(
-        "/workspaces/",
+        "/workspaces",
         json=simulator_configuration,
     )
     assert response.status_code == 200
