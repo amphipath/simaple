@@ -3,20 +3,6 @@ version: simaple.io/DefaultActiveSkill
 metadata:
   label:
     group: windbreaker
-    name: '엘리멘트 : 스톰'
-patch:
-  - SkillLevelPatch
-  - EvalPatch
-data:
-  name: '엘리멘트 : 스톰'
-  stat:
-    damage_multiplier: 10
----
-kind: DefaultActiveSkill
-version: simaple.io/DefaultActiveSkill
-metadata:
-  label:
-    group: windbreaker
     name: 세컨드 윈드
 patch:
   - SkillLevelPatch
@@ -25,34 +11,3 @@ data:
   name: 세컨드 윈드
   stat:
     attack_power: 15
----
-kind: DefaultActiveSkill
-version: simaple.io/DefaultActiveSkill
-metadata:
-  label:
-    group: windbreaker
-    name: 시그너스 나이츠
-patch:
-  - SkillLevelPatch
-  - EvalPatch
-data:
-  name: 시그너스 나이츠
-  default_skill_level: 30
-  stat:
-    DEX: '{{ math.floor((18 + 5 * character_level) * math.ceil(skill_level / 2) * 0.01) }}'
----
-kind: DefaultActiveSkill
-version: simaple.io/DefaultActiveSkill
-metadata:
-  label:
-    group: windbreaker
-    name: 샤프 아이즈
-patch:
-  - SkillLevelPatch
-  - EvalPatch
-data:
-  name: 샤프 아이즈
-  default_skill_level: 30
-  stat:
-    critical_rate: '{{ 5 + (skill_level // 2) }}'
-    critical_damage: '{{ skill_level // 2 }}'

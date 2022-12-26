@@ -14,12 +14,12 @@ data:
   cooldown: 0
   delay: 690
   duration: 60_000
-  synergy: 
+  synergy:
     damage_multiplier: 15
     ignored_defence: 15
 ---
 kind: Component
-version: simaple.io/AttackSkillComponent
+version: simaple.io/KeydownSkillComponent
 metadata:
   label:
     group: windbreaker
@@ -55,8 +55,11 @@ data:
   type: DamageSkill
   name: 스톰 브링어
   delay: 0
-  damage: 380
+  duration: 200_000
+  damage: '{{ 305 + 5 * skill_level }}'
   hit: 0.3
+  combat_orders_enabled: true
+  default_skill_level: 15
   disable_validity: True
 ---
 kind: Component
@@ -79,7 +82,33 @@ data:
   name: 트라이플링 윔
   delay: 0
   damage: '{{ (200 + skill_level * 3) * (1 - 0.01 * (10 + skill_level // 3)) + (300 + skill_level * 3) * 0.01 * (10 + skill_level // 3) }}'
-  hit: '{{ 2 * (35 + 10 + skill_level // 2) * 0.01 }}'
+  hit: '{{ (35 + skill_level // 2) * 0.01 }}'
+  combat_orders_enabled: true
+  default_skill_level: 30
+  disable_validity: True
+---
+kind: Component
+version: simaple.io/BuffFinalAttackComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 스톰 윔
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  listening_actions:
+    핀포인트 피어스.use.emitted.global.damage: trigger
+    천공의 노래.use.emitted.global.damage: trigger
+    하울링 게일.elapse.emitted.global.damage: trigger
+    시그너스 팔랑크스.elapse.emitted.global.damage: trigger
+    볼텍스 스피어.elapse.emitted.global.damage: trigger
+  type: DamageSkill
+  name: 스톰 윔
+  delay: 0
+  damage: 560
+  cooldown: 120_000
+  hit: 0.3
   disable_validity: True
 ---
 kind: Component
@@ -104,3 +133,16 @@ data:
     - '{{ 785 + skill_level * 31 }}'
     - '{{ 785 + 375 + skill_level * (31 + 19) }}'
   tick_hit: [3, 3, 3]
+---
+kind: Component
+version: simaple.io/DOTSkillComponent
+metadata:
+  label:
+    group: windbreaker
+    name: 아이들 윔
+patch:
+  - SkillLevelPatch
+  - EvalPatch
+data:
+  name: 아이들 윔
+  delay: 450

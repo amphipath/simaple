@@ -1,8 +1,25 @@
 kind: Component
+version: simaple.io/BuffSkillComponent
+metadata:
+  label:
+    group: cygnus
+    name: 글로리 오브 가디언즈
+data:
+  name: 글로리 오브 가디언즈
+  cooldown: 120_000
+  delay: 0
+  red: false
+  rem: false
+  duration: 60_000
+  stat:
+    damage_multiplier: 10
+---
+kind: Component
 version: simaple.io/CygnusPhalanxComponent
 metadata:
   label:
     group: cygnus
+    name: 시그너스 팔랑크스
 patch:
   - SkillLevelPatch
   - EvalPatch
