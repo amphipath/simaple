@@ -1,9 +1,17 @@
+import os
+
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from simaple.app.interface.container import WebContainer, WebSetting
 from simaple.app.interface.handler import add_exception_handlers
-from simaple.app.interface.routers import snapshot, statistics, workspace
+from simaple.app.interface.routers import (
+    component_spec,
+    snapshot,
+    statistics,
+    workspace,
+)
 from simaple.app.interface.routers.component_spec import component_spec_router
 from simaple.app.interface.routers.snapshot import snapshot_router
 from simaple.app.interface.routers.statistics import statistics_router
@@ -16,7 +24,7 @@ class SimapleWeb(fastapi.FastAPI):
 
         container = WebContainer()
         container.config.from_pydantic(WebSetting())
-        container.wire(packages=[statistics, workspace, snapshot])
+        container.wire(packages=[statistics, workspace, snapshot, component_spec])
 
         self.container: WebContainer = container
 
@@ -31,6 +39,12 @@ class SimapleWeb(fastapi.FastAPI):
 
 
 app = SimapleWeb()
+app.mount(
+    "/view",
+    StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")),
+    name="static",
+)
+
 add_exception_handlers(app)
 
 app.add_middleware(
